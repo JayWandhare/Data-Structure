@@ -1,0 +1,119 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct Thread
+{
+	int data;
+	struct Thread* left, * right;
+	int lthread, rthread;
+}*Root=NULL;
+
+typedef struct Thread thread;
+
+thread* Create()
+{
+	thread* temp;
+	temp = malloc(sizeof(thread));
+	printf("Enter the Data to Insert:");
+	scanf("%d", &temp->data);
+
+	temp->left = temp->right = NULL;
+	temp->lthread =temp->rthread=1;
+	return temp;
+}
+
+thread* Insert(thread* temp,thread* new)
+{
+	if (Root== NULL)
+		temp = new;
+	else { 
+
+			if (new->data < temp->data)
+			{
+				if (temp->lthread==1)
+				{
+					new->right = temp;
+					new->left = temp->left;
+					temp->lthread = 0;
+					temp->left = new;
+				}
+				else
+					temp->left = Insert(temp->left, new);
+			}
+			else if (new->data > temp->data)
+			{
+				if (temp->rthread==1)
+				{
+					new->left = temp;
+					new->right = temp->right;
+					temp->rthread = 0;
+					temp->right = new;
+				}
+				else
+					temp->right= Insert(temp->right, new);
+			}
+			else if (new->data == temp->data)
+			{
+				printf("Data is Duplicate.");
+				_getch();
+			}
+	}
+	return temp;
+}
+
+thread* InorderSuccessor(thread* temp)
+{
+	if (temp->rthread == 1)
+		return temp->right;
+	else {
+
+		temp = temp->right;
+
+		while (temp->lthread == 0)
+			temp = temp->left;
+		return temp;
+	}
+}
+
+void Inorder(thread* temp)
+{
+	if (temp == NULL)
+		printf("Tree is Empty.");
+	else {
+		while (temp->lthread == 0)
+			temp = temp->left;
+
+		while (temp != NULL)
+		{
+			printf("%d ",temp->data);
+			temp = InorderSuccessor(temp);
+		}
+	}
+}
+
+int main()
+{
+	int ch;
+
+	while (1)
+	{
+		system("cls");
+		printf("1] Insert\n2] Inorder\n3] Exit");
+		printf("\n\nEnter the Choice:");
+		scanf("%d", &ch);
+
+		switch (ch)
+		{
+		case 1:
+			Root=Insert(Root, Create());
+			break;
+		case 2:
+			Inorder(Root);
+			_getch();
+			break;
+		case 3:
+			exit(0);
+		}
+	}
+	return 0;
+}
