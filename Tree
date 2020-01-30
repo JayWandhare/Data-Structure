@@ -5,402 +5,334 @@
 struct BinaryTree
 {
     int info;
-    int *left;
-    int *right;
+    int* left;
+    int* right;
 };
 
 typedef struct BinaryTree Node;
-Node* Root=NULL;
+Node* Root = NULL;
 
 Node* Create()
 {
     Node* temp;
 
-    temp=(Node*)malloc(sizeof(Node));
+    temp = (Node*)malloc(sizeof(Node));
     printf("\nEnter the info:");
-    scanf("%d",&temp->info);
-    temp->left=NULL;
-    temp->right=NULL;
+    scanf("%d", &temp->info);
+    temp->left = NULL;
+    temp->right = NULL;
     return temp;
 }
 
 int Height(Node* temp)
-{int i=1,j=1;
-    if(temp==NULL)
+{
+    int i = 1, j = 1;
+    if (temp == NULL)
         return 0;
-    else{
-           if(temp->left!=NULL)
-            i=i+Height(temp->left);
-           if(temp->right!=NULL)
-            j=j+Height(temp->right);
+    else {
+        if (temp->left != NULL)
+            i = i + Height(temp->left);
+        if (temp->right != NULL)
+            j = j + Height(temp->right);
 
-           if(i>j)
+        if (i > j)
             return i;
-           else
+        else
             return j;
     }
 }
 
 int BF(Node* temp)
 {
-  if(temp==NULL)
-    return 0;
-  else
-    return (1+Height(temp->left))-(1+Height(temp->right));
+    if (temp == NULL)
+        return 0;
+    else
+        return (1 + Height(temp->left)) - (1 + Height(temp->right));
 }
 
 Node* LL(Node* temp)
 {
-    Node *y;
+    Node* y;
 
-    y=temp->left;
-    temp->left=y->right;
-    y->right=temp;
+    y = temp->left;
+    temp->left = y->right;
+    y->right = temp;
 
     return y;
 }
 
 Node* RR(Node* temp)
 {
-    Node *y;
+    Node* y;
 
-    y=temp->right;
-    temp->right=y->left;
-    y->left=temp;
+    y = temp->right;
+    temp->right = y->left;
+    y->left = temp;
 
     return y;
 }
 
 Node* LR(Node* temp)
 {
-    Node *x,*y;
+    Node* x, * y;
 
-    x=temp->left;
-    y=x->right;
+    x = temp->left;
+    y = x->right;
 
-    temp->left=y->right;
-    x->right=y->left;
-    y->right=temp;
-    y->left=x;
+    temp->left = y->right;
+    x->right = y->left;
+    y->right = temp;
+    y->left = x;
 
     return y;
 }
 
 Node* RL(Node* temp)
 {
-    Node *x,*y;
+    Node* x, * y;
 
-    x=temp->right;
-    y=x->left;
+    x = temp->right;
+    y = x->left;
 
-    temp->right=y->left;
-    x->left=y->right;
+    temp->right = y->left;
+    x->left = y->right;
 
-    y->left=temp;
-    y->right=x;
+    y->left = temp;
+    y->right = x;
 
     return y;
 }
 
-Node* Insert(Node* temp,Node* new)
+Node* Insert(Node* temp, Node* new)
 {
-    if(Root==NULL)
-        Root=new;
-    else{
-         Node *t;
-           if(temp!=NULL)
-           {
-               if(new->info<=temp->info)
-               {
-                   if(temp->left==NULL)
-                     temp->left=new;
-                   else
-                     temp->left=Insert(temp->left,new);
+    if (Root == NULL)
+        Root = new;
+    else {
+        Node* t;
+        if (temp != NULL)
+        {
+            if (new->info <= temp->info)
+            {
+                if (temp->left == NULL)
+                    temp->left = new;
+                else
+                    temp->left = Insert(temp->left, new);
 
-                   t=temp->left;
+                t = temp->left;
 
-                  if(BF(temp)==2)
-                   {
-                       if(t->info>new->info)
-                        temp=LL(temp);
-                      else
-                        temp=LR(temp);
-                   }
-               }
-               else if(new->info>=temp->info)
-               {
-                   if(temp->right==NULL)
-                    temp->right=new;
-                   else
-                    temp->right=Insert(temp->right,new);
+                if (BF(temp) == 2)
+                {
+                    if (t->info > new->info)
+                        temp = LL(temp);
+                    else
+                        temp = LR(temp);
+                }
+            }
+            else if (new->info >= temp->info)
+            {
+                if (temp->right == NULL)
+                    temp->right = new;
+                else
+                    temp->right = Insert(temp->right, new);
 
-                    t=temp->right;
+                t = temp->right;
 
-                    if(BF(temp)==-2)
-                    {
-                        if(t->info<new->info)
-                          temp=RR(temp);
-                        else
-                          temp=RL(temp);
-                    }
-               }
-           }
-         return temp;
+                if (BF(temp) == -2)
+                {
+                    if (t->info < new->info)
+                        temp = RR(temp);
+                    else
+                        temp = RL(temp);
+                }
+            }
+        }
+        return temp;
     }
 }
 
 int Bfactor(Node* temp)
-{int i=1,j=1;
-    if(temp==NULL)
-    {
-      printf("Tree is Empty.");
-      return 0;
-    }
-    else{
-           if(temp->left!=NULL)
-             i=i+Bfactor(temp->left);
-
-           if(temp->right!=NULL)
-             j=j+Bfactor(temp->right);
-
-             printf("\nBalance Factor of %d is %d.",temp->info,i-j);
-
-             if(i>j)
-                return i;
-             else
-                return j;
-    }
-}
-
-void inorder(Node *temp)
 {
-    if(Root==NULL)
+    int i = 1, j = 1;
+    if (temp == NULL)
+    {
         printf("Tree is Empty.");
-    else if(temp!=NULL)
-     {
-          inorder((Node*)temp->left);
-          printf("%d->",temp->info);
-          inorder((Node*)temp->right);
-     }
+        return 0;
+    }
+    else {
+        if (temp->left != NULL)
+            i = i + Bfactor(temp->left);
+
+        if (temp->right != NULL)
+            j = j + Bfactor(temp->right);
+
+        printf("\nBalance Factor of %d is %d.", temp->info, i - j);
+
+        if (i > j)
+            return i;
+        else
+            return j;
+    }
 }
 
-void preorder(Node *temp)
+void inorder(Node* temp)
 {
-     if(Root==NULL)
-       printf("Tree is Empty.");
-     else if(temp!=NULL)
-     {
-          printf("%d->",temp->info);
-          preorder((Node*)temp->left);
-          preorder((Node*)temp->right);
-     }
-}
-
-void postorder(Node *temp)
-{
-     if(temp!=NULL)
-     {
-          postorder((Node*)temp->left);
-          postorder((Node*)temp->right);
-          printf("%d->",temp->info);
-     }
-}
-
-
-struct Queue
-{
-    int cap;
-    int front,rear;
-    int *array;
-};
-
-typedef struct Queue Q;
-
-Q* Create1()
-{
-    Q *temp;
-
-    temp=malloc(sizeof(Q));
-    if(!temp) return NULL;
-
-    temp->cap=4;
-    temp->front=temp->rear=-1;
-    temp->array=malloc(sizeof(int)*temp->cap);
-    if(!temp->array) return NULL;
-
-    return temp;
-}
-
-void Insert1(Q* temp,Node* t)
-{
-          temp->rear=(temp->rear+1)%temp->cap;
-          temp->array[temp->rear]=t;
-
-          if(temp->front==-1)
-            temp->front=temp->rear;
-}
-
-Q* Delete(Q* temp)
-{Q* t=temp->array[temp->front];
-          if(temp->front==temp->rear)
-            temp->front=temp->rear=-1;
-          else
-            temp->front=(temp->front+1)%temp->cap;
-return t;
-}
-
-int isEmpty(Q* temp)
-{
-    return (temp->front==-1);
-}
-
-void lvlOrder(Node* temp)
-{
-    Q* t=Create1();
-    Node* s;
-
-    Insert1(t,temp);
-    while(!isEmpty(t))
+    if (Root == NULL)
+        printf("Tree is Empty.");
+    else if (temp != NULL)
     {
-       s=Delete(t);
+        inorder((Node*)temp->left);
+        printf("%d->", temp->info);
+        inorder((Node*)temp->right);
+    }
+}
 
-       printf("%d ",s->info);
-       if(s->left)
-          Insert1(t,s->left);
-       if(s->right)
-          Insert1(t,s->right);
+void preorder(Node* temp)
+{
+    if (Root == NULL)
+        printf("Tree is Empty.");
+    else if (temp != NULL)
+    {
+        printf("%d->", temp->info);
+        preorder((Node*)temp->left);
+        preorder((Node*)temp->right);
+    }
+}
 
+void postorder(Node* temp)
+{
+    if (temp != NULL)
+    {
+        postorder((Node*)temp->left);
+        postorder((Node*)temp->right);
+        printf("%d->", temp->info);
     }
 }
 
 Node* findMax(Node* temp)
-{Node *t=temp->right;
+{
+    Node* t = temp->right;
 
-        while(t!=NULL)
-        {
-            if(temp->info<t->info)
-            temp=t;
+    while (t != NULL)
+    {
+        if (temp->info < t->info)
+            temp = t;
 
-           t=t->right;
-        }
-      return temp;
+        t = t->right;
+    }
+    return temp;
 }
 
-Node* Del(Node* root,int data)
+Node* Del(Node* root, int data)
 {
-    if(Root==NULL)
+    if (Root == NULL)
+    {
+        printf("No Such Element Found.");
+        _getch();
+    }
+    else if (root->info > data)
+    {
+        root->left = Del(root->left, data);
+
+        if (BF(root) == -2)
+            if (BF(root->right) <= 0)
+                root = RR(root);
+            else
+                root = RL(root);
+    }
+    else if (root->info < data)
+    {
+        root->right = Del(root->right, data);
+
+        if (BF(root) == 2)
+            if (BF(root->left) >= 0)
+                root = LL(root);
+            else
+                root = LR(root);
+    }
+    else if (root->info == data) {
+        Node* t;
+
+        if (root->left && root->right)
         {
-            printf("No Such Element Found.");
-            getch();
-        }
-    else if(root->info>data)
-        {
-            root->left=Del(root->left,data);
+            t = findMax(root->left);
+            root->info = t->info;
+            root->left = Del(root->left, root->info);
 
-            if(BF(root)==-2)
-                if(BF(root->right)<=0)
-                   root=RR(root);
+            if (BF(root) == -2)
+                if (BF(root->right) <= 0)
+                    root = RR(root);
                 else
-                   root=RL(root);
+                    root = RL(root);
         }
-    else if(root->info<data)
-        {
-            root->right=Del(root->right,data);
+        else {
+            t = root;
+            if (root->left == NULL)
+                root = root->right;
+            else if (root->right == NULL)
+                root = root->left;
 
-            if(BF(root)==2)
-                if(BF(root->left)>=0)
-                    root=LL(root);
-                else
-                    root=LR(root);
+            free(t);
         }
-    else if(root->info==data){
-          Node *t;
-
-          if(root->left && root->right)
-          {
-              t=findMax(root->left);
-              root->info=t->info;
-              root->left=Del(root->left,root->info);
-
-            if(BF(root)==-2)
-                if(BF(root->right)<=0)
-                   root=RR(root);
-                else
-                   root=RL(root);
-          }
-          else{
-                t=root;
-                if(root->left==NULL)
-                    root=root->right;
-                else if(root->right==NULL)
-                    root=root->left;
-
-                free(t);
-          }
     }
     else
     {
         printf("No Such Element Found");
-        getch();
+        _getch();
     }
-   return root;
+    return root;
 
 }
 
-void Delet(Node* root)
+void Delete(Node* root)
 {
     int data;
     printf("Enter data to Delete:");
-    scanf("%d",&data);
+    scanf("%d", &data);
 
-    Root=Del(root,data);
+    Root = Del(root, data);
 }
 
 int main()
 {
-     int ch;
-     while(1)
-     {system("cls");
-          printf("1.Insert\n2.preorder\n3.Inorder\n4.Postorder\n5.LevelOrder\n6.Balance Factor\n7.Delete\n8.Exit");
-          printf("\n\nEnter Your Choice : ");
-          scanf("%d",&ch);
-          switch(ch)
-          {
-               case 1:
-                    Root=Insert(Root,Create());
-                    break;
-               case 2:
-                    printf("\n\nDisplay Tree in preorder Traversal : ");
-                    preorder(Root);
-                    getch();
-                    break;
-               case 3:
-                    printf("\n\nDisplay Tree in Inorder Traversal : ");
-                    inorder(Root);
-                    getch();
-                    break;
-               case 4:
-                    printf("\n\nDisplay Tree in postorder Traversal : ");
-                    postorder(Root);
-                    getch();
-                    break;
-               case 5:
-                       printf("\n\nDisplay Tree in LevelOrder Traversal : ");
-                       lvlOrder(Root);
-                       getch();
-                       break;
-               case 6:
-                       Bfactor(Root);
-                       getch();
-                       break;
-               case 7:
-                       Delet(Root);
-                       break;
-               case 8:
-                    exit(0);
-              default:
-                    printf("\n Inavild Choice..");
-          }
-     }
+    int ch;
+    while (1)
+    {
+        system("cls");
+        printf("1.Insert\n2.preorder\n3.Inorder\n4.Postorder\n5.Balance Factor\n6.Delete\n7.Exit");
+        printf("\n\nEnter Your Choice : ");
+        scanf("%d", &ch);
+        switch (ch)
+        {
+        case 1:
+            Root = Insert(Root, Create());
+            break;
+        case 2:
+            printf("\n\nDisplay Tree in preorder Traversal : ");
+            preorder(Root);
+            _getch();
+            break;
+        case 3:
+            printf("\n\nDisplay Tree in Inorder Traversal : ");
+            inorder(Root);
+            _getch();
+            break;
+        case 4:
+            printf("\n\nDisplay Tree in postorder Traversal : ");
+            postorder(Root);
+            _getch();
+            break;
+        case 5:
+            Bfactor(Root);
+            _getch();
+            break;
+        case 6:
+            Delete(Root);
+            break;
+        case 7:
+            exit(0);
+        default:
+            printf("\n Inavild Choice..");
+        }
+    }
 
 }
