@@ -1,0 +1,121 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+
+int heap[100];
+int i = 0;
+
+void Max(int a, int b);
+
+void Insert()
+{
+    int data;
+
+    printf("Enter the data to Insert:");
+    scanf("%d", &data);
+
+    if (i == 0)
+        heap[0] = data;
+    else {
+        heap[i] = data;
+
+        if (heap[i] > heap[(i - 1) / 2])
+            Max(i, (i - 1) / 2);
+    }
+    i++;
+}
+
+void Max(int a, int b)
+{
+    heap[a] = heap[a] + heap[b];
+    heap[b] = heap[a] - heap[b];
+    heap[a] = heap[a] - heap[b];
+
+    if (heap[b] > heap[(b - 1) / 2])
+        Max(b, (b - 1) / 2);
+}
+
+void Min(int s)
+{
+    if (heap[s * s + 1] > heap[s * s + 2])
+    {
+        if (heap[s * s + 1] > heap[s])
+        {
+            Max(s * s + 1, s);
+            Min(s * s + 1);
+        }
+    }
+    else if (heap[s * s + 2] > heap[s])
+    {
+        Max(s * s + 2, s);
+        Min(s * s + 2);
+    }
+
+}
+
+void Delete()
+{
+    if (i == 0)
+    {
+        printf("Tree is Empty");
+        _getch();
+    }
+    else {
+        int data;
+        printf("Enter the Data to Delete:");
+        scanf("%d", &data);
+
+        for (int j = 0;j < i;j++)
+        {
+            if (heap[j] == data)
+            {
+                heap[j] = heap[i - 1];
+                i--;
+                break;
+            }
+        }
+        Min(0);
+    }
+}
+
+void Display()
+{
+    if (i == 0)
+    {
+        printf("Tree is Empty.");
+    }
+    else {
+            for (int j = 0;j < i;j++)
+                printf("%d ", heap[j]);
+    }
+}
+
+int main()
+{
+    int ch;
+    while (1)
+    {
+        system("cls");
+
+        printf("1] Insert\n2] Display\n3] Delete\n4] Exit");
+        printf("\n\nEnter the choice:");
+        scanf("%d", &ch);
+
+        switch (ch)
+        {
+        case 1:
+            Insert();
+            break;
+        case 2:
+            Display();
+            _getch();
+            break;
+        case 3:
+            Delete();
+            break;
+        case 4:
+            exit(0);
+        }
+    }
+    return 0;
+}
