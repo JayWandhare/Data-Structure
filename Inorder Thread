@@ -1,0 +1,123 @@
+#include<iostream>
+#include<conio.h>
+#include<stdlib.h>
+using namespace std;
+
+class thread
+{
+public:
+		int data;
+		thread* left, * right;
+		bool lthread, rthread;
+}*Root=NULL;
+
+thread* Create()
+{
+	thread *temp;
+	temp = new thread;
+
+	cout << "Enter the Data to Insert:";
+	cin >> temp->data;
+
+	temp->left = temp->right = NULL;
+	temp->lthread = temp->rthread = true;
+	return temp;
+}
+
+thread* Insert(thread* temp, thread* n)
+{
+	if (temp == NULL)
+		temp = n;
+	else {
+		if (temp->data > n->data)
+		{
+			if (temp->lthread == true)
+			{
+				n->left = temp->left;
+				temp->left = n;
+				n->right = temp;
+				temp->lthread = false;
+			}
+			else
+				temp->left = Insert(temp->left, n);
+		}
+		else if (temp->data < n->data)
+		{
+			if (temp->rthread == true)
+			{
+				n->right = temp->right;
+				n->left = temp;
+				temp->rthread = false;
+				temp->right = n;
+			}
+			else
+				temp->right = Insert(temp->right, n);
+		}
+		else if (temp->data == n->data)
+		{
+			cout << "Data is Duplicate.";
+			_getch();
+		}
+	}
+	return temp;
+}
+
+thread* InorderSuccessor(thread* temp)
+{
+	if (temp->rthread==true)
+		temp=temp->right;
+	else {
+	    	temp = temp->right;
+			   while (temp->lthread != true)
+			   {
+				   temp = temp->left;
+        	   }
+	}
+	return temp;
+}
+
+void Inorder(thread* temp)
+{
+	if (Root == NULL)
+		cout << "Tree is Empty.";
+	else {
+
+		while (temp->lthread != true)
+			temp = temp->left;
+
+		while (temp != NULL)
+		{
+			cout << temp->data << " ";
+			temp = InorderSuccessor(temp);
+		}
+	}
+}
+
+int main()
+{
+	int ch;
+	while (1)
+	{
+		system("cls");
+		cout << "1] Insert\n2] Inorder\n3] Exit";
+		cout << "\n\nEnter the choice:";
+		cin >> ch;
+
+		switch (ch)
+		{
+		case 1:
+			Root = Insert(Root, Create());
+			break;
+		case 2:
+			Inorder(Root);
+			_getch();
+			break;
+		case 3:
+			exit(0);
+		default:
+			cout << "Invalid Choice.";
+			_getch();
+		}
+	}
+	return 0;
+}
