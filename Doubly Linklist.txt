@@ -1,0 +1,205 @@
+#include<iostream>
+#include<stdlib.h>
+#include<conio.h>
+using namespace std;
+
+class linkList
+{
+ public:
+	    int data;
+		linkList* left, * right;
+}*Head=NULL;
+
+typedef linkList LL;
+
+LL* Create()
+{
+	LL *temp;
+
+	temp = new LL;
+	cout << "Enter Data to Insert:";
+	cin >> temp->data;
+	temp->left = temp->right = NULL;
+	return temp;
+}
+
+void Insert(LL* temp,int ch)
+{
+	LL* New=Create();
+
+	if (temp == NULL)
+		Head=New;
+	else {
+		
+		if (ch == 1)
+		{
+			New->right = temp;
+			temp->left = New;
+			Head = New;
+		}
+		else if (ch == 2)
+		{
+			int count=1;
+
+			while (temp->right != NULL)
+			{
+				count++;
+				temp = temp->right;
+			}
+
+			temp = Head;
+			for (int i = 1;i < count / 2;i++)
+				temp = temp->right;
+			New->right = temp->right;
+			New->left = temp;
+			temp->right = New;
+		}
+		else if (ch == 3)
+		{
+			while (temp->right != NULL)
+				temp = temp->right;
+			temp->right = New;
+			New->left = temp;
+		}
+	}
+}
+
+void Delete(LL* temp, int ch)
+{
+	if (temp == NULL)
+	{
+		cout << "List is Empty.";
+		_getch();
+	}
+	else {
+		if (ch == 1)
+		{
+			Head = temp->right;
+			free(temp);
+		}
+		else if (ch == 2)
+		{
+			int count = 1;
+
+			while (temp->right!= NULL)
+			{
+				count++;
+				temp = temp->right;
+			}
+
+			temp = Head;
+			for (int i = 1;i <(count / 2);i++)
+				temp = temp->right;
+			LL* s = temp->right;
+			if (s != NULL)
+			{
+				temp->right = s->right;
+				if(s->right!=NULL)
+					s->right->left = temp;
+				free(s);
+			}
+			else
+			{
+				free(Head);
+				Head = NULL;
+			}
+
+			
+		}
+		else if (ch == 3)
+		{
+			while (temp->right != NULL)
+				temp = temp->right;
+			LL *s = temp;
+			temp=temp->left;
+			if (temp != NULL)
+				temp->right = NULL;
+			else
+				Head = NULL;
+			free(s);
+		}
+	}
+}
+
+void Display(LL* temp)
+{
+	if (temp == NULL)
+		cout << "List is Empty.";
+	else {
+			while (temp != NULL)
+			{
+				cout << temp->data << " ";
+				temp = temp->right;
+			}
+	}
+}
+
+void Options(int ch)
+{
+	int choice,i=1;
+	while (i)
+	{
+		system("cls");
+		cout << "1] At Front\n2] Middle\n3] At End";
+		cout << "\n\nEnter the Choice:";
+		cin >> choice;
+
+		if (ch == 1)
+		{
+			if (0 < choice < 4)
+			{
+				Insert(Head, choice);
+				i--;
+		    }
+			else {
+				cout << "Invalid Choice.";
+				_getch();
+			}	
+		}
+		else if (ch == 3)
+		{
+			if (0 < choice < 4)
+			{
+				Delete(Head, choice);
+				i--;
+			}
+			else {
+				cout << "Invalid Choice.";
+				_getch();
+			}
+		}
+	}
+}
+
+int main()
+{
+	int ch;
+
+	while (1)
+	{
+		system("cls");
+		cout << "1] Insert\n2] Display\n3] Delete\n4] Exit";
+		cout << "\n\nEnter the Choice:";
+		cin >> ch;
+
+		switch (ch)
+		{
+		case 1:
+			Options(ch);
+			break;
+		case 2:
+			Display(Head);
+			_getch();
+			break;
+		case 3:
+			Options(ch);
+			break;
+		case 4:
+			exit(0);
+		default:
+			cout << "Invalid Choice.";
+			_getch();
+		}
+	}
+}
+
