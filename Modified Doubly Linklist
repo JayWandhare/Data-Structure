@@ -101,7 +101,7 @@ void Insert(LL* temp,int ch)
 			else
 			{
 				cout << "Such Position doesn't Exist.";
-				_getch();
+				getch();
 			}
 			
 		}
@@ -113,7 +113,7 @@ void Delete(LL* temp, int ch)
 	if (temp == NULL)
 	{
 		cout << "List is Empty.";
-		_getch();
+		getch();
 	}
 	else {
 		if (ch == 1)
@@ -207,7 +207,7 @@ void Delete(LL* temp, int ch)
 			}
 			else {
 				cout << "Such Position doesn't Exist.";
-				_getch();
+				getch();
 			}
 		}
 	}
@@ -245,7 +245,7 @@ void Options(int ch)
 		    }
 			else {
 				cout << "Invalid Choice.";
-				_getch();
+				getch();
 			}	
 		}
 		else if (ch == 3)
@@ -257,7 +257,7 @@ void Options(int ch)
 			}
 			else {
 				cout << "Invalid Choice.";
-				_getch();
+				getch();
 			}
 		}
 	}
@@ -281,7 +281,7 @@ int main()
 			break;
 		case 2:
 			Display(Head);
-			_getch();
+			getch();
 			break;
 		case 3:
 			Options(ch);
@@ -290,7 +290,7 @@ int main()
 			exit(0);
 		default:
 			cout << "Invalid Choice.";
-			_getch();
+			getch();
 		}
 	}
 }
